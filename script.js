@@ -1,75 +1,99 @@
 (function () {
+  'use strict';
+
   const SOURCES = [
     {
-      owner: "Pixel-Props",
-      repo: "build.prop",
-      label: "0x11DFE",
-      type: "stable",
+      owner: 'Pixel-Props',
+      repo: 'build.prop',
+      label: '0x11DFE',
+      type: 'stable',
     },
     {
-      owner: "Elcapitanoe",
-      repo: "Build-Prop-BETA",
-      label: "Elcapitanoe",
-      type: "beta",
+      owner: 'Elcapitanoe',
+      repo: 'Build-Prop-BETA',
+      label: 'Elcapitanoe',
+      type: 'beta',
     },
   ];
 
-const DEVICE_MAP = {
-  "rango": "Pixel 10 Pro Fold",
-  "frankel": "Pixel 10 Pro XL",
-  "blazer": "Pixel 10 Pro",
-  "mustang": "Pixel 10",
-  "comet": "Pixel 9 Pro Fold",
-  "komodo": "Pixel 9 Pro XL",
-  "caiman": "Pixel 9 Pro",
-  "tokay": "Pixel 9",
-  "tegu": "Pixel 9a",
-  "felix": "Pixel Fold",
-  "husky": "Pixel 8 Pro",
-  "shiba": "Pixel 8",
-  "akita": "Pixel 8a",
-  "cheetah": "Pixel 7 Pro",
-  "panther": "Pixel 7",
-  "lynx": "Pixel 7a",
-  "tangorpro": "Pixel Tablet",
-  "raven": "Pixel 6 Pro",
-  "oriole": "Pixel 6",
-  "bluejay": "Pixel 6a",
-  "redfin": "Pixel 5",
-  "barbet": "Pixel 5a",
-  "coral": "Pixel 4 XL",
-  "flame": "Pixel 4",
-  "bramble": "Pixel 4a (5G)",
-  "sunfish": "Pixel 4a",
-  "crosshatch": "Pixel 3 XL",
-  "blueline": "Pixel 3",
-  "bonito": "Pixel 3a XL",
-  "sargo": "Pixel 3a",
-  "taimen": "Pixel 2 XL",
-  "walleye": "Pixel 2",
-  "marlin": "Pixel XL",
-  "sailfish": "Pixel",
-  "ryu": "Pixel C"
-};
+  // Device Codename Map
+  const DEVICE_MAP = {
+    // Pixel 11 Series (Bears)
+    "formosan": "Pixel 11a",
+    "yogi": "Pixel 11 Pro Fold",
+    "kodiak": "Pixel 11 Pro XL",
+    "grizzly": "Pixel 11 Pro",
+    "cubs": "Pixel 11",
 
-  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    // Pixel 10 Series (Equines / Horses)
+    "stallion": "Pixel 10a",
+    "rango": "Pixel 10 Pro Fold",
+    "frankel": "Pixel 10 Pro XL",
+    "blazer": "Pixel 10 Pro",
+    "mustang": "Pixel 10",
 
-  const attrEscape = (s) => String(s ?? "").replace(/"/g, "&quot;");
+    // Pixel 9 Series (Reptiles)
+    "comet": "Pixel 9 Pro Fold",
+    "komodo": "Pixel 9 Pro XL",
+    "caiman": "Pixel 9 Pro",
+    "tokay": "Pixel 9",
+    "tegu": "Pixel 9a",
+
+    // Pixel 8 Series (Dogs)
+    "felix": "Pixel Fold",
+    "husky": "Pixel 8 Pro",
+    "shiba": "Pixel 8",
+    "akita": "Pixel 8a",
+
+    // Pixel 7 Series (Cats)
+    "cheetah": "Pixel 7 Pro",
+    "panther": "Pixel 7",
+    "lynx": "Pixel 7a",
+    "tangorpro": "Pixel Tablet",
+
+    // Pixel 6 Series (Birds)
+    "raven": "Pixel 6 Pro",
+    "oriole": "Pixel 6",
+    "bluejay": "Pixel 6a",
+
+    // Pixel 5 & 4 & Legacy Generations
+    "redfin": "Pixel 5",
+    "barbet": "Pixel 5a",
+    "coral": "Pixel 4 XL",
+    "flame": "Pixel 4",
+    "bramble": "Pixel 4a (5G)",
+    "sunfish": "Pixel 4a",
+    "crosshatch": "Pixel 3 XL",
+    "blueline": "Pixel 3",
+    "bonito": "Pixel 3a XL",
+    "sargo": "Pixel 3a",
+    "taimen": "Pixel 2 XL",
+    "walleye": "Pixel 2",
+    "marlin": "Pixel XL",
+    "sailfish": "Pixel",
+    "ryu": "Pixel C"
+  };
+
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  const attrEscape = (s) => String(s ?? '').replace(/"/g, '&quot;');
 
   const fmtDate = (s) => {
     try {
-      return new Date(s).toLocaleDateString("en-GB", {
-        year: "numeric",
-        month: "long",
-        day: "2-digit",
+      return new Date(s).toLocaleDateString('en-GB', {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit',
       });
-    } catch { return s || ""; }
+    } catch {
+      return s || '';
+    }
   };
 
   async function fetchLatestRelease(owner, repo) {
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`, {
-      headers: { "Accept": "application/vnd.github+json" }
+      headers: { 'Accept': 'application/vnd.github+json' }
     });
     if (!res.ok) {
       if (res.status === 404) return null;
@@ -93,7 +117,7 @@ const DEVICE_MAP = {
       }
     }
 
-    return "Checksum not found";
+    return 'Checksum not found';
   }
 
   function detectDeviceName(filename) {
@@ -103,7 +127,7 @@ const DEVICE_MAP = {
         return marketName;
       }
     }
-    return "Universal / Unknown";
+    return 'Universal / Unknown';
   }
 
   function renderLatestBlock(dataList) {
@@ -117,15 +141,15 @@ const DEVICE_MAP = {
       const assets = release.assets || [];
       const assetsTotal = assets.reduce((s, a) => s + (a.download_count || 0), 0);
 
-      const badgeHtml = type === "beta"
+      const badgeHtml = type === 'beta'
         ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20 uppercase tracking-wide">Beta</span>`
         : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-500/20 uppercase tracking-wide">Stable</span>`;
 
-      let assetsHtml = "";
+      let assetsHtml = '';
       if (assets.length) {
         assetsHtml = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">' +
           assets.map(a => {
-            const fileNameRaw = a.name || "";
+            const fileNameRaw = a.name || '';
             const fileName = esc(fileNameRaw);
             const dlUrl = esc(a.browser_download_url);
             const dlCount = a.download_count || 0;
@@ -149,18 +173,18 @@ const DEVICE_MAP = {
                    </div>
                    <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                       <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                      <span>${dlCount} Downloads</span>
+                      <span>${dlCount.toLocaleString()} Downloads</span>
                    </div>
                 </div>
               </div>
               <div class="flex items-center gap-2 pt-4 border-t border-slate-200/60 dark:border-white/10 mt-auto">
-                <a href="${dlUrl}" class="flex-1 text-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition shadow-lg shadow-blue-500/20 active:scale-95" target="_blank">Download</a>
+                <a href="${dlUrl}" class="flex-1 text-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition shadow-lg shadow-blue-500/20 active:scale-95" target="_blank" rel="noopener noreferrer">Download</a>
                 <button type="button" class="px-4 py-2 bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10 text-xs font-semibold rounded-lg transition show-checksum-btn active:scale-95" 
                   data-filename="${attrEscape(fileName)}" 
                   data-checksum="${attrEscape(checksum)}">Hash</button>
               </div>
             </div>`;
-          }).join("") + '</div>';
+          }).join('') + '</div>';
       } else {
         assetsHtml = `<div class="text-center py-10 text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-white/5 rounded-2xl mt-6 border border-dashed border-slate-200 dark:border-white/10 text-sm">No assets available.</div>`;
       }
@@ -174,69 +198,69 @@ const DEVICE_MAP = {
               ${badgeHtml}
             </div>
             <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400">
-               By <a href="https://github.com/${esc(label)}" target="_blank" class="font-medium text-blue-600 dark:text-blue-400 hover:underline">${esc(label)}</a> &bull; ${pubDate}
+               By <a href="https://github.com/${esc(label)}" target="_blank" rel="noopener noreferrer" class="font-medium text-blue-600 dark:text-blue-400 hover:underline">${esc(label)}</a> &bull; ${pubDate}
             </p>
           </div>
           <div class="flex items-center justify-between md:justify-end bg-slate-50 dark:bg-white/5 px-5 py-3 rounded-2xl border border-slate-100 dark:border-white/5 md:ml-auto w-full md:w-auto gap-6">
              <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider md:hidden">Total Downloads</span>
              <div class="text-right flex items-baseline gap-2 md:block">
-               <span class="block text-xl md:text-2xl font-bold text-slate-900 dark:text-white leading-none">${assetsTotal}</span>
+               <span class="block text-xl md:text-2xl font-bold text-slate-900 dark:text-white leading-none">${assetsTotal.toLocaleString()}</span>
                <span class="hidden md:block text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mt-1">Downloads</span>
              </div>
           </div>
         </div>
         ${assetsHtml}
       </div>`;
-    }).join("");
+    }).join('');
   }
 
   function initChecksumModals() {
-    const modal = document.getElementById("checksumModal");
+    const modal = document.getElementById('checksumModal');
     if (!modal) return;
     
     const elements = {
-      title: document.getElementById("modalFileName"),
-      body: document.getElementById("modalChecksumData"),
-      close: document.getElementById("modalCloseBtn"),
-      backdrop: document.getElementById("modalBackdrop")
+      title: document.getElementById('modalFileName'),
+      body: document.getElementById('modalChecksumData'),
+      close: document.getElementById('modalCloseBtn'),
+      backdrop: document.getElementById('modalBackdrop')
     };
 
-    const closeModal = () => modal.classList.add("hidden");
+    const closeModal = () => modal.classList.add('hidden');
     
-    document.addEventListener("click", (ev) => {
-      const btn = ev.target.closest(".show-checksum-btn");
+    document.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('.show-checksum-btn');
       if (btn) {
         elements.title.textContent = btn.dataset.filename;
         elements.body.textContent = btn.dataset.checksum;
-        modal.classList.remove("hidden");
+        modal.classList.remove('hidden');
 
-        const copyBtn = document.getElementById("modalCopyBtn");
+        const copyBtn = document.getElementById('modalCopyBtn');
         const newBtn = copyBtn.cloneNode(true);
         copyBtn.parentNode.replaceChild(newBtn, copyBtn);
 
-        newBtn.addEventListener("click", async () => {
+        newBtn.addEventListener('click', async () => {
           try {
             await navigator.clipboard.writeText(btn.dataset.checksum);
             const originalText = newBtn.textContent;
-            newBtn.textContent = "Copied ✓";
-            newBtn.classList.add("bg-green-600", "text-white");
+            newBtn.textContent = 'Copied ✓';
+            newBtn.classList.add('bg-green-600', 'text-white');
             setTimeout(() => {
               newBtn.textContent = originalText;
-              newBtn.classList.remove("bg-green-600", "text-white");
+              newBtn.classList.remove('bg-green-600', 'text-white');
             }, 1500);
           } catch {
-            newBtn.textContent = "Failed";
+            newBtn.textContent = 'Failed';
           }
         });
       }
     });
 
-    elements.close.addEventListener("click", closeModal);
-    if (elements.backdrop) elements.backdrop.addEventListener("click", closeModal);
+    elements.close.addEventListener('click', closeModal);
+    if (elements.backdrop) elements.backdrop.addEventListener('click', closeModal);
   }
 
   async function main() {
-    const latestEl = document.getElementById("latestBlock");
+    const latestEl = document.getElementById('latestBlock');
     if (!latestEl) return;
 
     try {
@@ -262,5 +286,9 @@ const DEVICE_MAP = {
     }
   }
 
-  main();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', main);
+  } else {
+    main();
+  }
 })();

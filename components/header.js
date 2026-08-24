@@ -73,18 +73,18 @@ class MyHeader extends HTMLElement {
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex items-center justify-between h-20">
             
-            <div class="flex items-center gap-2 md:gap-3 group cursor-pointer min-w-0" onclick="window.location.href='${basePath}/'">
+            <a href="${basePath}/" class="flex items-center gap-2 md:gap-3 group min-w-0">
               <div class="relative shrink-0">
                 <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
                 <div class="relative w-10 h-10 bg-white dark:bg-[#0B1120] rounded-lg flex items-center justify-center shadow-sm ring-1 ring-slate-200 dark:ring-white/10">
-                   <img src="${basePath}/src/pixelprop-logo-rc-us.webp" />
+                   <img src="${basePath}/src/pixelprop-logo-rc-us.webp" alt="Pixel Prop Logo" width="32" height="32" />
                 </div>
               </div>
               <div class="flex flex-col min-w-0">
                 <span class="font-bold text-lg tracking-tight text-slate-900 dark:text-slate-100 leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">Pixel Prop</span>
                 <span class="text-[10px] font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-widest truncate">Project</span>
               </div>
-            </div>
+            </a>
 
             <div class="hidden md:flex items-center gap-1">
               ${renderDesktopLinks()}
